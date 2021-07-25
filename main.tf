@@ -15,7 +15,7 @@ locals {
   name = var.name
   subnets = var.subnets
   
-  vcn = local.oci_core_vcn.vcn
+  vcn = oci_core_vcn.vcn
   
   prv_subnets = [ for subnet in local.subnets: subnet if subnet.public == false ]
   pub_subnets = [ for subnet in local.subnets: subnet if subnet.public == true ]
