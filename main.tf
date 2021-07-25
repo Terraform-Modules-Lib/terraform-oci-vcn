@@ -26,8 +26,11 @@ resource "oci_core_vcn" "vcn" {
 }
 
 module "privates" {
-  for_each = { for subnet in local.subnets:
-    !subnet.public ? subnet.cidr => subnet : null
+  for_each = { for prv_subnet in {
+    for subnet in local.subnets:
+      subnet if subnet.public == false
+    }
+    prv_subnet.cidr => prv_subnet
   }
   source  = "Terraform-Modules-Lib/subnet-private/oci"
   
