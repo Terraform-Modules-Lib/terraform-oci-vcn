@@ -16,6 +16,9 @@ locals {
   subnets = var.subnets
   
   vcn = local.oci_core_vcn.vcn
+  
+  prv_subnets = [ for subnet in local.subnets: subnet if subnet.public == false ]
+  pub_subnets = [ for subnet in local.subnets: subnet if subnet.public == true ]
 }
 
 resource "oci_core_vcn" "vcn" {
@@ -26,12 +29,7 @@ resource "oci_core_vcn" "vcn" {
 }
 
 module "privates" {
-  for_each = { for prv_subnet in [
-    for subnet in local.subnets:
-      subnet if subnet.public == false
-    ]
-    prv_subnet.cidr => prv_subnet
-  }
+  for_each = { for subnet in local.prv_subnets: subnet.cidr => subnet }
   source  = "Terraform-Modules-Lib/subnet-private/oci"
   
   name = each.value.name
