@@ -11,29 +11,27 @@ terraform {
 }
 
 locals {
-  vcn_id = var.vcn_id
-  cidr = var.cidr
+  compartment_id = var.compartment_id
   name = var.name
+  subnets = var.subnets
   
-  vcn = data.oci_core_vcn.this
-  subnet = module.subnet.subnet
-  routing_table = oci_core_route_table.routing_table
+  vcn = local.oci_core_vcn.vcn
 }
 
-data "oci_core_vcn" "this" {
-  vcn_id = local.vcn_id
+resource "oci_core_vcn" "vcn" {
+  compartment_id = local.compartment_id
+
+  display_name = local.name
+  dns_label = local.name
 }
 
-module "subnet" {
-  source  = "Terraform-Modules-Lib/subnet/oci"
+module "privates" {
+  for_each = { for subnet in local.subnets:
+    !subnet.public ? subnet.cidr => subnet
+  }
+  source  = "Terraform-Modules-Lib/subnet-private/oci"
   
+  name = each.value.name
+  cidr = each.value.cidr
   vcn_id = local.vcn.id
-  name = local.name
-  cidr = local.cidr
-  public = true
-}
-
-resource "oci_core_route_table_attachment" "routing" {
-  subnet_id = local.subnet.id
-  route_table_id = local.routing_table.id
 }
