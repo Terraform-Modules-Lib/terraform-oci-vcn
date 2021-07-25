@@ -1,3 +1,6 @@
-variable "vcn_id" {}
-variable "cidr" {}
 variable "name" {}
+variable "compartment_id" {}
+
+variable "subnets" {
+  default = []
+}
