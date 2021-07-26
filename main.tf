@@ -14,6 +14,7 @@ locals {
   compartment_id = var.compartment_id
   name = var.name
   subnets = var.subnets
+  nat_addr_id = var.nat_addr_id
   
   vcn = oci_core_vcn.vcn
   
