@@ -16,6 +16,7 @@ module "public_subnets" {
 
   name = each.value.name
   cidr = each.value.cidr
+  acl = each.value.acl
 
   vcn_id = local.vcn.id
   internet_gw_id = local.gw.internet.id
