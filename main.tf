@@ -17,6 +17,12 @@ locals {
   nat_addr_id = var.nat_addr_id
   
   vcn = oci_core_vcn.vcn
+  gw = {
+    internet = oci_core_internet_gateway.internet_gw
+    nat = oci_core_nat_gateway.nat_gw
+    oci = oci_core_service_gateway.oci_gw
+  }
+  subnets = concat(module.private_subnets[*].subnet, module.public_subnets[*].subnet)
   
   prv_subnets = [ for subnet in local.subnets: subnet if subnet.public == false ]
   pub_subnets = [ for subnet in local.subnets: subnet if subnet.public == true ]
