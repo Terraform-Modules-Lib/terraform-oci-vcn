@@ -4,6 +4,7 @@ module "private_subnets" {
   
   name = each.value.name
   cidr = each.value.cidr
+  acl = each.value.acl
 
   vcn_id = local.vcn.id
   nat_gw_id = local.gw.nat.id
