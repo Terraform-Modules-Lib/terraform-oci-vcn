@@ -17,6 +17,8 @@ locals {
   nat_addr_id = var.nat_addr_id
   
   vcn = oci_core_vcn.vcn
+  
+  nat_addr = try(data.oci_core_public_ip.nat_addr[0], oci_core_public_ip.nat_addr[0])
   gw = {
     internet = oci_core_internet_gateway.internet_gw
     nat = oci_core_nat_gateway.nat_gw
